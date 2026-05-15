@@ -2,11 +2,12 @@ import tkinter as tk
 from tkinter import Canvas
 import math
 
-class AdventureGame:
+class PokemonYellowGame:
+    """Jogo estilo Pokemon Yellow usando Tkinter"""
     
     def __init__(self, root):
         self.root = root
-        self.root.title("Adventure")
+        self.root.title("Pokemon Yellow - Game Boy Style")
         self.root.geometry("320x288")
         self.root.resizable(False, False)
         
@@ -47,46 +48,79 @@ class AdventureGame:
         self.update_game()
     
     def draw_player(self):
-        """Desenhar o bonequinho amarelo com contorno branco"""
-        x1 = self.player_x
-        y1 = self.player_y
-        x2 = self.player_x + self.player_size
-        y2 = self.player_y + self.player_size
+        """Desenhar o bonequinho estilo personagem vermelho e azul"""
+        cx = self.player_x + self.player_size // 2  # Centro X
+        cy = self.player_y + self.player_size // 2  # Centro Y
         
-        # Apagar o bonequinho anterior se existir
-        if self.player_oval is not None:
-            self.canvas.delete(self.player_oval)
+        # Cores
+        RED = "#FF3333"
+        CYAN = "#00FFFF"
+        DARK_RED = "#CC0000"
         
-        # Desenhar quadrado amarelo com contorno branco
-        self.player_oval = self.canvas.create_rectangle(
-            x1, y1, x2, y2,
-            fill=self.YELLOW,
-            outline=self.WHITE,
+        # Desenhar corpo (elipse/oval grande vermelha)
+        # Corpo principal
+        self.canvas.create_oval(
+            cx - 14, cy - 4,
+            cx + 14, cy + 20,
+            fill=RED,
+            outline=DARK_RED,
             width=2
         )
         
-        # Desenhar olhos (pequenos círculos pretos)
-        eye_size = 4
+        # Desenhar cabeça (círculo vermelho no topo)
+        self.canvas.create_oval(
+            cx - 10, cy - 18,
+            cx + 10, cy - 2,
+            fill=RED,
+            outline=DARK_RED,
+            width=2
+        )
+        
+        # Desenhar olhos (dois círculos ciano)
+        eye_radius = 3
         # Olho esquerdo
         self.canvas.create_oval(
-            x1 + 8, y1 + 8,
-            x1 + 8 + eye_size, y1 + 8 + eye_size,
-            fill=self.BLACK
+            cx - 5, cy - 12,
+            cx - 5 + eye_radius * 2, cy - 12 + eye_radius * 2,
+            fill=CYAN,
+            outline="#0099FF",
+            width=1
         )
         # Olho direito
         self.canvas.create_oval(
-            x2 - 12, y1 + 8,
-            x2 - 12 + eye_size, y1 + 8 + eye_size,
-            fill=self.BLACK
+            cx + 5 - eye_radius, cy - 12,
+            cx + 5 + eye_radius, cy - 12 + eye_radius * 2,
+            fill=CYAN,
+            outline="#0099FF",
+            width=1
         )
         
-        # Desenhar boca (pequena linha preta)
-        mouth_y = y1 + 20
-        self.canvas.create_line(
-            x1 + 10, mouth_y,
-            x2 - 10, mouth_y,
-            fill=self.BLACK,
+        # Desenhar braço/detalhe azul (lado esquerdo)
+        self.canvas.create_oval(
+            cx - 18, cy + 2,
+            cx - 8, cy + 14,
+            fill=CYAN,
+            outline="#0099FF",
             width=2
+        )
+        
+        # Desenhar pernas (dois pequenos retângulos vermelhos)
+        leg_width = 4
+        # Perna esquerda
+        self.canvas.create_rectangle(
+            cx - 8, cy + 20,
+            cx - 4, cy + 28,
+            fill=RED,
+            outline=DARK_RED,
+            width=1
+        )
+        # Perna direita
+        self.canvas.create_rectangle(
+            cx + 4, cy + 20,
+            cx + 8, cy + 28,
+            fill=RED,
+            outline=DARK_RED,
+            width=1
         )
     
     def on_key_press(self, event):
@@ -108,25 +142,17 @@ class AdventureGame:
         if self.keys_pressed.get('Down') or self.keys_pressed.get('s'):
             self.player_y += self.player_speed
 
-        # Movimento para a esquerda
         if self.keys_pressed.get('Left') or self.keys_pressed.get('a'):
             self.player_x -= self.player_speed
 
-        # Movimento para a direita
         if self.keys_pressed.get('Right') or self.keys_pressed.get('d'):
-            self.player_x += self.player_speed
-
+            self.player_x += self.player_speed        
+        
         # Manter o bonequinho dentro dos limites
         if self.player_y < 0:
             self.player_y = 0
         if self.player_y + self.player_size > 288:
             self.player_y = 288 - self.player_size
-
-        # Manter o bonequinho dentro dos limites horizontais
-        if self.player_x < 0:
-            self.player_x = 0
-        if self.player_x + self.player_size > 320:
-            self.player_x = 320 - self.player_size
     
     def update_game(self):
         """Loop principal do jogo"""
@@ -145,7 +171,7 @@ class AdventureGame:
 
 def main():
     root = tk.Tk()
-    game = AdventureGame(root)
+    game = PokemonYellowGame(root)
     root.mainloop()
 
 
